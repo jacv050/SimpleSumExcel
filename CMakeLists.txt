@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+
+project(SimpleSumExcel)
+
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -march=native")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp -march=native")
+
+FILE(GLOB GUIHEADERS "gui/*.h*")
+FILE(GLOB GUISOURCES "gui/*.cpp")
+
+FILE(GLOB GUIPAGESHEADERS "gui/pages/*.h*")
+FILE(GLOB GUIPAGESSOURCES "gui/pages/*.cpp")
+
+#Find QT
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+find_package(Qt5Core)
+find_package(Qt5Widgets)
+
+add_executable( main WIN32 ${GUISOURCES} ${GUIHEADERS} ${GUIPAGESHEADERS} ${GUIPAGESSOURCES} )
+target_link_libraries( main Qt5::Widgets Qt5::Core Qt5::WinMain)
