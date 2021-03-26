@@ -18,5 +18,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5Core)
 find_package(Qt5Widgets)
 
+#ExcelFormat library
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/ExcelFormat")
+SET(EXCELFORMAT_ROOT "${CMAKE_CURRENT_LIST_DIR}/ExcelFormat")
+find_package(ExcelFormat REQUIRED)
+
 add_executable( main WIN32 ${GUISOURCES} ${GUIHEADERS} ${GUIPAGESHEADERS} ${GUIPAGESSOURCES} )
-target_link_libraries( main Qt5::Widgets Qt5::Core Qt5::WinMain)
+include_directories(${EXCELFORMAT_INCLUDE_DIRS})
+target_link_libraries( main Qt5::Widgets Qt5::Core Qt5::WinMain ${EXCELFORMAT_LIBRARIES})
