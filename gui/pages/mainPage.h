@@ -11,6 +11,7 @@
 #include <QtWidgets>
 #include "ui_mainPage.h"
 #include "gui/gui.h"
+#include "src/SettingsLoader.hpp"
 
 /**
  * Page to select the tool
@@ -23,6 +24,7 @@ public:
 
 private:
 	Ui::mainPage *mUi;
+	SettingsLoader settings;
 
 private slots:
     void countBalance();

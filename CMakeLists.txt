@@ -8,6 +8,9 @@ project(SimpleSumExcel)
 FILE(GLOB GUIHEADERS "gui/*.h*")
 FILE(GLOB GUISOURCES "gui/*.cpp")
 
+FILE(GLOB SRCHEADERS "src/*.h*")
+FILE(GLOB SRCSOURCES "src/*.cpp")
+
 FILE(GLOB GUIPAGESHEADERS "gui/pages/*.h*")
 FILE(GLOB GUIPAGESSOURCES "gui/pages/*.cpp")
 
@@ -23,6 +26,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/ExcelFormat")
 SET(EXCELFORMAT_ROOT "${CMAKE_CURRENT_LIST_DIR}/ExcelFormat")
 find_package(ExcelFormat REQUIRED)
 
-add_executable( main WIN32 ${GUISOURCES} ${GUIHEADERS} ${GUIPAGESHEADERS} ${GUIPAGESSOURCES} )
+add_executable( main WIN32 ${GUISOURCES} ${GUIHEADERS} ${GUIPAGESHEADERS} ${GUIPAGESSOURCES} ${SRCHEADERS} ${SRCSOURCES})
 include_directories(${EXCELFORMAT_INCLUDE_DIRS})
 target_link_libraries( main Qt5::Widgets Qt5::Core Qt5::WinMain ${EXCELFORMAT_LIBRARIES})
