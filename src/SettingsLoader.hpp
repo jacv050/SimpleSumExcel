@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <string>
 
+//All the strings, except path, are in lower case after loading.
 class SettingsLoader  
 {
 	private:
@@ -21,6 +22,7 @@ class SettingsLoader
 		void loadCredentialCell(const std::string& line);
 		void loadTotalCell(const std::string& line);
 		void loadSpecialSheetCell(const std::string& line);
+		void tolower(std::string& s);
 
 	public:
 		const std::vector<std::string>& getPathPlaces() const {return pathPlaces;};

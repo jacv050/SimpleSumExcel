@@ -17,14 +17,24 @@ SettingsLoader::SettingsLoader()
     }
 }
 
+void SettingsLoader::tolower(std::string& s){
+    for(int i=0; i<s.length(); ++i){
+        if(s[i]>='A' && s[i]<='Z')
+            s[i] -= ('Z'-'z');
+    }
+}
+
 void SettingsLoader::loadPathPlaces(const std::string& line){
     int i=0;
     std::string value;
     lineParser(line, value, i);
     value.clear();
     while(lineParser(line, value, i)){
-        pathPlaces.push_back(value);
-        value.clear();
+        //If value is not empyt push back the new path
+        if(value != ""){
+            pathPlaces.push_back(value);
+            value.clear();
+        }
     }
     pathPlaces.push_back(value);
 }
@@ -34,6 +44,7 @@ void SettingsLoader::loadCredentialCell(const std::string& line){
     std::string value;
     lineParser(line, value, i);
     lineParser(line, credentialCell, i);
+    tolower(credentialCell);
 }
 
 void SettingsLoader::loadTotalCell(const std::string& line){
@@ -41,6 +52,7 @@ void SettingsLoader::loadTotalCell(const std::string& line){
     std::string value;
     lineParser(line, value, i);
     lineParser(line, totalCell, i);
+    tolower(totalCell);
 }
 
 void SettingsLoader::loadSpecialSheetCell(const std::string& line){
@@ -49,6 +61,8 @@ void SettingsLoader::loadSpecialSheetCell(const std::string& line){
     lineParser(line, value, i);
     lineParser(line, sheet, i);
     lineParser(line, cell, i);
+    tolower(sheet);
+    tolower(cell);
     specialSheetCell.push_back(sheet);
     specialSheetCell.push_back(cell);
 }
