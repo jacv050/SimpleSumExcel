@@ -23,6 +23,10 @@ class SettingsLoader
 		void loadSpecialSheetCell(const std::string& line);
 
 	public:
+		const std::vector<std::string>& getPathPlaces() const {return pathPlaces;};
+		const std::string& getCredentialCell() const {return credentialCell;};
+		const std::string& getTotalCell() const {return totalCell;};
+		const std::vector<std::string>& getSpecialSheetCells() const {return specialSheetCell;};
 
 		SettingsLoader();
 		~SettingsLoader();
