@@ -14,7 +14,8 @@ SettingsLoader::SettingsLoader()
         std::getline(settingsFile,line);
         loadSpecialSheetCell(line);
         std::getline(settingsFile,line);
-        loadMonthesFolder(line);
+
+        //loadMonthesFolder(line);
         settingsFile.close();
     }
 }
@@ -81,6 +82,13 @@ void SettingsLoader::loadMonthesFolder(const std::string& line){
             value.clear();
         }
     }
+}
+
+void SettingsLoader::loadRootDir(const std::string& line){
+    int i=0;
+    std::string value;
+    utils::lineParser(line, value, i);
+    utils::lineParser(line, rootDir, i);
 }
 
 SettingsLoader::~SettingsLoader()
