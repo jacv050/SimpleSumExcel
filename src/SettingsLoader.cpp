@@ -6,7 +6,7 @@ SettingsLoader::SettingsLoader()
 	std::ifstream settingsFile("settings.csv");
     if(settingsFile.is_open()){
         std::getline(settingsFile,line);
-        loadPathPlaces(line);
+        loadFoldersPlaces(line);
         std::getline(settingsFile,line);
         loadCredentialCell(line);
         std::getline(settingsFile,line);
@@ -27,7 +27,7 @@ void SettingsLoader::tolower(std::string& s){
     }
 }
 
-void SettingsLoader::loadPathPlaces(const std::string& line){
+void SettingsLoader::loadFoldersPlaces(const std::string& line){
     int i=0;
     std::string value;
     utils::lineParser(line, value, i);
@@ -35,11 +35,11 @@ void SettingsLoader::loadPathPlaces(const std::string& line){
     while(utils::lineParser(line, value, i)){
         //If value is not empyt push back the new path
         if(value != ""){
-            pathPlaces.push_back(value);
+            foldersPlaces.push_back(value);
             value.clear();
         }
     }
-    pathPlaces.push_back(value);
+    foldersPlaces.push_back(value);
 }
 
 void SettingsLoader::loadCredentialCell(const std::string& line){

@@ -13,13 +13,13 @@
 class SettingsLoader  
 {
 	private:
-		std::vector< std::string > pathPlaces;
+		std::vector< std::string > foldersPlaces;
 		std::string credentialCell;
 		std::string totalCell;
 		std::string rootDir;
 		std::vector< std::string > specialSheetCell;
 		std::vector< std::string > monthesFolders;
-		void loadPathPlaces(const std::string& line);
+		void loadFoldersPlaces(const std::string& line);
 		void loadCredentialCell(const std::string& line);
 		void loadTotalCell(const std::string& line);
 		void loadSpecialSheetCell(const std::string& line);
@@ -28,7 +28,7 @@ class SettingsLoader
 		void tolower(std::string& s);
 
 	public:
-		const std::vector<std::string> getPathPlaces() const{return pathPlaces;};
+		const std::vector<std::string> getFoldersPlaces() const{return foldersPlaces;};
 		const std::string getCredentialCell() const {return credentialCell;};
 		const std::string getTotalCell() const {return totalCell;};
 		const std::vector<std::string> getSpecialSheetCells() const {return specialSheetCell;};
