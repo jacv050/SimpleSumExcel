@@ -51,21 +51,17 @@ int MainExcelXLS::calculateBalance(const std::string& date, const std::string& e
 
     std::string credentialCellValue;
     int output = 0;
-    for(int i=0; i<foldersPlaces.size(); ++i){
-        std::string dir = excelsFolder + "/" + foldersPlaces[i];
-        if(boost::filesystem::is_directory(dir.c_str())){
-            //Place folder
-            boost::filesystem::directory_iterator end_itr;
-            for(boost::filesystem::directory_iterator itr(dir); itr != end_itr; ++itr){
+    boost::filesystem::directory_iterator end_itr;
+    for(boost::filesystem::directory_iterator itrPlaces(excelsFolder); itrPlaces != end_itr; ++itrPlaces){
+        if(boost::filesystem::is_directory(itrPlaces->path())){
+            for(boost::filesystem::directory_iterator itrExcels(itrPlaces->path()); itrExcels != end_itr; ++itrExcels){
                 //Check xls files
-                if(boost::filesystem::extension(itr->path())==".xls"){
+                if(boost::filesystem::extension(itrExcels->path())==".xls"){
                     //ExcelFormat::BasicExcel xls(dir.c_str();
+                    std::cout << std::endl;
                 }
             }
         }
-        //for(int j=0; j<){
-
-        //}
     }
 
     //Read Credential Cell values
