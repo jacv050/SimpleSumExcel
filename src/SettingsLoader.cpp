@@ -6,8 +6,6 @@ SettingsLoader::SettingsLoader()
 	std::ifstream settingsFile("settings.csv");
     if(settingsFile.is_open()){
         std::getline(settingsFile,line);
-        loadFoldersPlaces(line);
-        std::getline(settingsFile,line);
         loadCredentialCell(line);
         std::getline(settingsFile,line);
         loadTotalCell(line);
