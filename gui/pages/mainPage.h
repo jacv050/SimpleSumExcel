@@ -11,6 +11,7 @@
 #include <QtWidgets>
 #include "ui_mainPage.h"
 #include "gui/gui.h"
+#include "src/MainExcelXLS.hpp"
 
 /**
  * Page to select the tool
@@ -23,9 +24,11 @@ public:
 
 private:
 	Ui::mainPage *mUi;
+	QString lastMonthFolder;
 
 private slots:
     void countBalance();
+	void setMonthFolder();
 };
 
 #endif /* WMAIN_H_ */
