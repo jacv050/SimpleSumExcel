@@ -1,24 +1,24 @@
-#include "MainExcelXLS.hpp"  
+#include "MainExcel.hpp"  
 
-MainExcelXLS* MainExcelXLS::mainExcelXLS = NULL;
+MainExcel* MainExcel::mainExcelXLS = NULL;
 
-MainExcelXLS::MainExcelXLS()
+MainExcel::MainExcel()
 {
 	
 }
 	
-MainExcelXLS::~MainExcelXLS()
+MainExcel::~MainExcel()
 {
 	
 }
 
-void MainExcelXLS::initMainExcelXLS(){
+void MainExcel::initMainExcel(){
     if(mainExcelXLS == NULL){
-        MainExcelXLS::mainExcelXLS = new MainExcelXLS();
+        MainExcel::mainExcelXLS = new MainExcel();
     }
 }
 
-void MainExcelXLS::splitCell(const std::string& cell, std::string& row, std::string& col){
+void MainExcel::splitCell(const std::string& cell, std::string& row, std::string& col){
     int i=0;
     while(i<cell.size() && cell[i] >= 'a' && cell[i] <= 'z'){
         col.append(1,cell[i]);
@@ -31,7 +31,7 @@ void MainExcelXLS::splitCell(const std::string& cell, std::string& row, std::str
 }
 
 //Date en format year/month/day
-int MainExcelXLS::calculateBalance(const std::string& date, const std::string& excelsFolder){
+int MainExcel::calculateBalance(const std::string& date, const std::string& excelsFolder){
     const std::vector< std::string > foldersPlaces = mainExcelXLS->settings.getFoldersPlaces();
     const std::string credentialCell = mainExcelXLS->settings.getCredentialCell();
     const std::string totalCell = mainExcelXLS->settings.getTotalCell();

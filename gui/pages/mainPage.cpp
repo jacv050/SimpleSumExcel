@@ -13,7 +13,7 @@ mUi(new Ui::mainPage){
 	mUi->setupUi(this);
 	connect(mUi->pbCountBalance, SIGNAL(clicked()), this, SLOT(countBalance()));
 	connect(mUi->pbSetMonthFolder, SIGNAL(clicked()), this, SLOT(setMonthFolder()));
-	MainExcelXLS::initMainExcelXLS();
+	MainExcel::initMainExcel();
 }
 
 mainPage::~mainPage() {
@@ -29,7 +29,7 @@ void mainPage::setMonthFolder(){
 }
 
 void mainPage::countBalance(){
-	int balance = MainExcelXLS::calculateBalance(mUi->calendar->selectedDate().toString(Qt::ISODate).toUtf8().constData(), 
+	int balance = MainExcel::calculateBalance(mUi->calendar->selectedDate().toString(Qt::ISODate).toUtf8().constData(), 
 					lastMonthFolder.toUtf8().constData());
 	return;
 }

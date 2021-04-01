@@ -8,19 +8,19 @@
 #include <stdlib.h> 
 #include "utils.hpp"
 
-class MainExcelXLS
+class MainExcel
 {
 	private:	
-		MainExcelXLS();
-		~MainExcelXLS();
+		MainExcel();
+		~MainExcel();
 		SettingsLoader settings;
-		static MainExcelXLS* mainExcelXLS;
+		static MainExcel* mainExcelXLS;
 		static void splitCell(const std::string& cell, std::string& row, std::string& col);
 
 	public:
-		MainExcelXLS(MainExcelXLS&) = delete;
-		void operator=(MainExcelXLS&) = delete;
-		static void initMainExcelXLS();
+		MainExcel(MainExcel&) = delete;
+		void operator=(MainExcel&) = delete;
+		static void initMainExcel();
 		//Date en format year/day/month
 		static int calculateBalance(const std::string& date, const std::string& excelsFolder);
 

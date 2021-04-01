@@ -11,7 +11,7 @@
 #include <QtWidgets>
 #include "ui_mainPage.h"
 #include "gui/gui.h"
-#include "src/MainExcelXLS.hpp"
+#include "src/MainExcel.hpp"
 
 /**
  * Page to select the tool
