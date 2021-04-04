@@ -23,7 +23,7 @@ find_package(Qt5Widgets)
 
 #Find Boost
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost 1.5 REQUIRED COMPONENTS filesystem)
+find_package(Boost 1.5 REQUIRED COMPONENTS filesystem date_time)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS} )
 
@@ -31,7 +31,13 @@ link_directories(${Boost_LIBRARY_DIRS} )
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/ExcelFormat")
 SET(EXCELFORMAT_ROOT "${CMAKE_CURRENT_LIST_DIR}/ExcelFormat")
 find_package(ExcelFormat REQUIRED)
+#include_directories(${EXCELFORMAT_INCLUDE_DIRS}) #${EXCELFORMAT_LIBRARIES}
+
+#Xlnt Library
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Xlnt/lib/cmake/xlnt")
+find_package(Xlnt REQUIRED)
+include_directories(${XLNT_INCLUDE_DIR} ${EXCELFORMAT_INCLUDE_DIRS})
+get_target_property(XLNT_LIBRARIES xlnt::xlnt IMPORTED_IMPLIB_DEBUG)
 
 add_executable( main WIN32 ${GUISOURCES} ${GUIHEADERS} ${GUIPAGESHEADERS} ${GUIPAGESSOURCES} ${SRCHEADERS} ${SRCSOURCES})
-include_directories(${EXCELFORMAT_INCLUDE_DIRS})
-target_link_libraries( main Qt5::Widgets Qt5::Core Qt5::WinMain ${EXCELFORMAT_LIBRARIES} Boost::filesystem)
+target_link_libraries( main Qt5::Widgets Qt5::Core Qt5::WinMain ${EXCELFORMAT_LIBRARIES} Boost::filesystem Boost::date_time xlnt::xlnt ${EXCELFORMAT_LIBRARIES})
