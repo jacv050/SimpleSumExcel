@@ -18,56 +18,107 @@ void MainExcel::initMainExcel(){
     }
 }
 
-void MainExcel::splitCell(const std::string& cell, std::string& row, std::string& col){
+void MainExcel::processCredential(const std::wstring& cred, std::wstring& id, std::wstring& limit){
     int i=0;
-    while(i<cell.size() && cell[i] >= 'a' && cell[i] <= 'z'){
-        col.append(1,cell[i]);
-        ++i;
+    utils::lineParser(cred, id, i, '-');
+    utils::lineParser(cred, limit, i, '-');//128 = €
+}
+
+std::string MainExcel::getMonthFolder(){
+    return mainExcelXLS->settings.getMonthFolder();
+}
+
+void MainExcel::saveMonthFolder(const std::string& monthFolder){
+    mainExcelXLS->settings.saveMonthFolder(monthFolder);
+}
+
+int MainExcel::getSheetIndex(const std::string& limit){
+    const std::vector< std::string > workSheets = mainExcelXLS->settings.getWorkSheets();
+    for(int i=0; i<workSheets.size(); ++i){
+        if(workSheets[i] == limit)
+            return i;
     }
-    while(i<cell.size()){
-        row.append(1,cell[i]);
-        ++i;
-    }
+    return -1;
+}
+
+boost::posix_time::ptime MainExcel::datetime_ole_to_posix(long ole_dt){
+  static const boost::gregorian::date ole_zero(1899,12,30);
+
+  boost::gregorian::days d(ole_dt);
+  boost::posix_time::ptime pt(ole_zero + d);
+
+  ole_dt -= d.days();
+  ole_dt *= 24 * 60 * 60 * 1000;
+
+  return pt + boost::posix_time::milliseconds(std::abs(ole_dt));
 }
 
 //Date en format year/month/day
-int MainExcel::calculateBalance(const std::string& date, const std::string& excelsFolder){
+double MainExcel::calculateBalance(const std::string& date, const std::string& excelsFolder){
     const std::vector< std::string > foldersPlaces = mainExcelXLS->settings.getFoldersPlaces();
-    const std::string credentialCell = mainExcelXLS->settings.getCredentialCell();
+    const std::vector< std::string > credentialCell = mainExcelXLS->settings.getCredentialCell();
     const std::string totalCell = mainExcelXLS->settings.getTotalCell();
     const std::vector< std::string > specialCell = mainExcelXLS->settings.getSpecialSheetCells();
+    //const std::vector< std::string > workSheets = mainExcelXLS->settings.getWorkSheets();
+    const std::vector< std::string > dateCell = mainExcelXLS->settings.getDateCell();
 
+    //Date cell row and col
+    int dtrow_i, dtcol_i;
+    utils::excelToIndex(dateCell[1], dtrow_i, dtcol_i);
+    //SpecialCell row and col
+    int sprow_i, spcol_i;
+    utils::excelToIndex(specialCell[1], sprow_i, spcol_i);
     //TotalCell row and col
-    std::string tcrow_s, tccol_s; int tcrow_i, tccol_i;
-    splitCell(totalCell, tcrow_s, tccol_s);
-    tcrow_i = atoi(tcrow_s.c_str()); tccol_i = utils::charExcelToNumber(tccol_s);
+    int tcrow_i, tccol_i;
+    utils::excelToIndex(totalCell, tcrow_i, tccol_i);
     //Credential cell row and col
-    std::string cccrow_s, cccol_s; int cccrow_i, cccol_i;
-    splitCell(credentialCell, cccrow_s, cccol_s);
-    cccrow_i = atoi(cccrow_s.c_str()); cccol_i = utils::charExcelToNumber(cccol_s);
+    int ccrow_i, cccol_i;
+    utils::excelToIndex(credentialCell[1], ccrow_i, cccol_i);
     //Date to calculate balance
     boost::gregorian::date calcDate(boost::gregorian::from_simple_string(date));
     //RootDir where places are. Absolute path whera the corresponding excels. 
 
-    std::string credentialCellValue;
-    int output = 0;
+    double output = 0;
+    double output_nospecial = 0;
     boost::filesystem::directory_iterator end_itr;
     for(boost::filesystem::directory_iterator itrPlaces(excelsFolder); itrPlaces != end_itr; ++itrPlaces){
         if(boost::filesystem::is_directory(itrPlaces->path())){
             for(boost::filesystem::directory_iterator itrExcels(itrPlaces->path()); itrExcels != end_itr; ++itrExcels){
                 //Check xls files
                 if(boost::filesystem::extension(itrExcels->path())==".xls"){
-                    //ExcelFormat::BasicExcel xls(dir.c_str();
-                    std::cout << std::endl;
+                    ExcelFormat::BasicExcel wb(itrExcels->path().string().c_str());
+                    ExcelFormat::BasicExcelWorksheet* ws = wb.GetWorksheet(dateCell[0].c_str());
+                    ExcelFormat::XLSFormatManager fmt_mgr(wb);
+                    //Get date cell value
+                    double dateCellValue = ws->Cell(dtrow_i, dtcol_i)->GetDouble();
+                    boost::posix_time::ptime preadDate = datetime_ole_to_posix((long)dateCellValue); //boost::posix_time::to_simple_string(readDate);
+                    boost::posix_time::ptime pcalcDate = boost::posix_time::ptime(calcDate);
+
+                    if(preadDate == pcalcDate){
+                        //Get special cell value SI/NO
+                        ws = wb.GetWorksheet(specialCell[0].c_str());
+                        std::string specialCellValue = ws->Cell(sprow_i, spcol_i)->GetString();
+                        utils::tolower(specialCellValue);
+                        
+                        //Get credential cell value
+                        ws = wb.GetWorksheet(credentialCell[0].c_str());
+                        std::wstring credentialCellValue = ws->Cell(ccrow_i, cccol_i)->GetWString();
+                        //Get id and limit from credential cellvalue
+                        std::wstring id, limit;
+                        processCredential(credentialCellValue, id, limit);
+                        //Get total value
+                        ws = wb.GetWorksheet(limit.c_str());
+
+                        double totalValue = ws->Cell(tcrow_i, tccol_i)->GetDouble();
+                        output += totalValue;
+                        if(specialCellValue != "si")
+                            output_nospecial += totalValue;
+                    }
+
                 }
             }
         }
     }
-
-    //Read Credential Cell values
-    std::string id, limit; int i=0;
-    utils::lineParser(credentialCellValue, id, i, '-');
-    utils::lineParser(credentialCellValue, limit, i, (char)128);//128 = €
 
     return output;
 }
