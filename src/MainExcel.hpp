@@ -24,7 +24,7 @@ class MainExcel
 		void operator=(MainExcel&) = delete;
 		static void initMainExcel();
 		//Date en format year/day/month
-		static double calculateBalance(const std::string& date, const std::string& excelsFolder);
+		static void calculateBalance(const std::string& date, const std::string& excelsFolder, double& total, double& totalnospecial);
 		//Credential reader
 		static void processCredential(const std::wstring& cred, std::wstring& id, std::wstring& limit);
 		//sheet index from limit and sheet arrays

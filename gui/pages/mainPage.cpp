@@ -31,7 +31,10 @@ void mainPage::setMonthFolder(){
 }
 
 void mainPage::countBalance(){
-	int balance = MainExcel::calculateBalance(mUi->calendar->selectedDate().toString(Qt::ISODate).toUtf8().constData(), 
-					mUi->txtMonthFolder->text().toUtf8().constData());
+	double total, totalnospecial;
+	MainExcel::calculateBalance(mUi->calendar->selectedDate().toString(Qt::ISODate).toUtf8().constData(), 
+					mUi->txtMonthFolder->text().toUtf8().constData(), total, totalnospecial);
+	mUi->lcdTotalBalance->display(total);
+	mUi->lcdTotalNoSpecialBalance->display(totalnospecial);
 	return;
 }

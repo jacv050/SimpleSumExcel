@@ -54,7 +54,7 @@ boost::posix_time::ptime MainExcel::datetime_ole_to_posix(long ole_dt){
 }
 
 //Date en format year/month/day
-double MainExcel::calculateBalance(const std::string& date, const std::string& excelsFolder){
+void MainExcel::calculateBalance(const std::string& date, const std::string& excelsFolder, double& total, double& totalnospecial){
     const std::vector< std::string > foldersPlaces = mainExcelXLS->settings.getFoldersPlaces();
     const std::vector< std::string > credentialCell = mainExcelXLS->settings.getCredentialCell();
     const std::string totalCell = mainExcelXLS->settings.getTotalCell();
@@ -78,8 +78,8 @@ double MainExcel::calculateBalance(const std::string& date, const std::string& e
     boost::gregorian::date calcDate(boost::gregorian::from_simple_string(date));
     //RootDir where places are. Absolute path whera the corresponding excels. 
 
-    double output = 0;
-    double output_nospecial = 0;
+    total = 0;
+    totalnospecial = 0;
     boost::filesystem::directory_iterator end_itr;
     for(boost::filesystem::directory_iterator itrPlaces(excelsFolder); itrPlaces != end_itr; ++itrPlaces){
         if(boost::filesystem::is_directory(itrPlaces->path())){
@@ -110,15 +110,13 @@ double MainExcel::calculateBalance(const std::string& date, const std::string& e
                         ws = wb.GetWorksheet(limit.c_str());
 
                         double totalValue = ws->Cell(tcrow_i, tccol_i)->GetDouble();
-                        output += totalValue;
+                        total += totalValue;
                         if(specialCellValue != "si")
-                            output_nospecial += totalValue;
+                            totalnospecial += totalValue;
                     }
 
                 }
             }
         }
     }
-
-    return output;
 }
